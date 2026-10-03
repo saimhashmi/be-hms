@@ -1,0 +1,25 @@
+{
+	"name": "healthcare-management-system-backend",
+	"version": "1.0.0",
+	"description": "healthcare management system backend app",
+	"homepage": "https://github.com/saimhashmi/be-hms#readme",
+	"bugs": {
+		"url": "https://github.com/saimhashmi/be-hms/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/saimhashmi/be-hms.git"
+	},
+	"license": "ISC",
+	"author": "azathoth",
+	"type": "module",
+	"main": "server.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"cors": "^2.8.6",
+		"dotenv": "^18.0.5",
+		"express": "^5.2.1"
+	}
+}
