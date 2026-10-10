@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import "dotenv/config";
+
+import userRouter from "./routes/userRoutes.js";
 
 // Initialise express server
 const server = express();
@@ -15,22 +16,21 @@ const corsOptions = {
 server.use(cors(corsOptions));
 server.use(express.json());
 
-server.get("/", (req, res) => {
-	res.status(200).json({
-		msg: "Hello, this is express server for healthcare management system",
+// API Routes
+server.use("/users", userRouter);
+
+// 404 Error handling middleware
+server.use((req, res, next) => {
+	return res.status(404).json({
+		msg: "API route not found",
 	});
 });
 
-server.post("/data", (req, res) => {
-	const { name, age } = req.body;
-	if (name || age) {
-		res.status(200).json({
-			msg: "data received",
-			data: { name, age },
-		});
-	}
-	res.status(400).json({
-		msg: "didn't receive data",
+// 500 Error handling middleware
+server.use((err, req, res, next) => {
+	console.error(err.stack);
+	res.status(500).json({
+		msg: "Internal Server Error",
 	});
 });
 

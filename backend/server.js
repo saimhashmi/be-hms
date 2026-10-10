@@ -1,5 +1,10 @@
+import "dotenv/config";
 import server from "./index.js";
 import os from "os";
+import {
+	connectUsingMongoose,
+	closeMongoDBConnection,
+} from "./config/mongooseConfig.js";
 
 const getNetworkAddress = () => {
 	const interfaces = os.networkInterfaces();
@@ -17,14 +22,17 @@ const getNetworkAddress = () => {
 const PORT = process.env.PORT || 3100;
 const networkIP = getNetworkAddress();
 
+console.log(PORT, process.env.PORT);
+
 //  Pass '0.0.0.0' to listen on your local network, not just localhost
-server.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, "0.0.0.0", async () => {
 	console.log(`  Local:            http://localhost:${PORT}`);
 	console.log(`  On Your Network:  http://${networkIP}:${PORT}`);
+	await connectUsingMongoose();
 });
 
 // Graceful shutdown: close Mongo connection on Ctrl+C
-// process.on("SIGINT", async () => {
-// 	await closeMongoDBConnection();
-// 	process.exit(0);
-// });
+process.on("SIGINT", async () => {
+	await closeMongoDBConnection();
+	process.exit(0);
+});
