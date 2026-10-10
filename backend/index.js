@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 
 import userRouter from "./routes/userRoutes.js";
+import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
+import ErrorHandler from "./utils/errorHandler.js";
 
 // Initialise express server
 const server = express();
@@ -19,19 +21,16 @@ server.use(express.json());
 // API Routes
 server.use("/users", userRouter);
 
-// 404 Error handling middleware
+// Invalid API routes Error handling middleware (404)
 server.use((req, res, next) => {
-	return res.status(404).json({
-		msg: "API route not found",
-	});
+	const error = new ErrorHandler(
+		`API route not found: ${req.method} ${req.originalUrl}`,
+		404,
+	);
+	next(error);
 });
 
-// 500 Error handling middleware
-server.use((err, req, res, next) => {
-	console.error(err.stack);
-	res.status(500).json({
-		msg: "Internal Server Error",
-	});
-});
+// Error handling middleware, Must be registered LAST
+server.use(errorHandlerMiddleware);
 
 export default server;
